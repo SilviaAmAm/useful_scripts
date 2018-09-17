@@ -67,7 +67,9 @@ def get_forces(file):
                 forces.append(forces_1)
                 line = next(file)
                 if len(line) <= 3:
-                    break
+                    line = next(file)
+                    if "Nuclear" in line:
+                        break
 
     return np.asarray(forces)
 
@@ -113,8 +115,7 @@ def check_data(f_n, xyz, zs, ene, forces):
     return True
 
 # Load all the dft filenames
-filenames_train = glob.glob("/Volumes/Transcend/data_sets/CN_isobutane_model/training_Molpro/*.out")
-filenames_test = glob.glob("/Volumes/Transcend/data_sets/CN_isobutane_model/test_Molpro/*.out")
+filenames_train = glob.glob("/Volumes/Transcend/data_sets/CN_squalane/dft/squalane_geoms_Molpro/*.out")
 
 # From each file extract energy, forces, and cartesian coordinates
 all_f_n = []
@@ -137,22 +138,6 @@ for item in filenames_train:
     else:
         print("File %s has errors" % (filename_number))
 
-max_filenumber = max(all_f_n)
-
-for item in filenames_test:
-    filename_number, xyz, zs, ene, forces = extract_data(item)
-
-    is_correct = check_data(filename_number, xyz, zs, ene, forces)
-
-    if is_correct:
-        all_f_n.append(filename_number+max_filenumber+1)
-        all_xyz.append(xyz)
-        all_zs.append(zs)
-        all_ene.append(ene)
-        all_forces.append(forces)
-    else:
-        print("File %s has errors" % (filename_number))
-
 all_f_n = np.asarray(all_f_n)
 all_xyz = np.asarray(all_xyz)
 all_ene = np.asarray(all_ene)
@@ -162,7 +147,7 @@ all_forces = np.asarray(all_forces)
 print("The shape of the xyz, zs, ene and forces is %s, %s, %s and %s." % (str(all_xyz.shape), str(all_zs.shape), str(all_ene.shape), str(all_forces.shape)) )
 
 # Make a hdf5 dataset with filenames, cartesian coordinates, energy and forces
-f = h5py.File("pruned_sopentane_cn_dft.hdf5", "w")
+f = h5py.File("squalane_cn_dft.hdf5", "w")
 
 f.create_dataset("Filenumber", all_f_n.shape, data=all_f_n)
 f.create_dataset("xyz", all_xyz.shape, data=all_xyz)

@@ -1,0 +1,20 @@
+Install anaconda 
+Create a new environment
+
+Install numpy (Doing this before installing everything else avoids having the problem of warnings:
+RuntimeWarning: numpy.dtype size changed, may indicate binary incompatibility. Expected 96, got 88
+It also seems to avoid the segfault in rdkit...) 
+
+Install Tensorflow (Follow website)
+
+Install Keras (pip install keras)
+
+Install scikit-learn (conda install scikit-learn)
+
+Installing rdkit (conda install -c rdkit rdkit)
+
+Installing Sphinx (conda install -c anaconda sphinx)
+
+Installing NBsphinx (conda install -c conda-forge nbsphinx)
+
+Installing sphinx_rtd_theme (conda install -c anaconda sphinx_rtd_theme)
