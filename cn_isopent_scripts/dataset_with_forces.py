@@ -162,7 +162,7 @@ all_forces = np.asarray(all_forces)
 print("The shape of the xyz, zs, ene and forces is %s, %s, %s and %s." % (str(all_xyz.shape), str(all_zs.shape), str(all_ene.shape), str(all_forces.shape)) )
 
 # Make a hdf5 dataset with filenames, cartesian coordinates, energy and forces
-f = h5py.File("pruned_sopentane_cn_dft.hdf5", "w")
+f = h5py.File("pruned_isopentane_cn_dft.hdf5", "w")
 
 f.create_dataset("Filenumber", all_f_n.shape, data=all_f_n)
 f.create_dataset("xyz", all_xyz.shape, data=all_xyz)
