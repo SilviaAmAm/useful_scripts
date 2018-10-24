@@ -1,16 +1,20 @@
 """
-This script checks the queue and submits as many jobs are specified.
+This script reads the file containing the indices of the jobs that have crashed and re-submits them.
 """
 
 import os
 import time
+import numpy as np
 
 ######### Things to change ################
-max_n_jobs = 50
-tot_jobs = 40604
-counter = 609        # The index of the next job to do
+file_with_crashed = "crashed_jobs.txt"
+max_n_jobs = 10
 ###########################################
 
+indices = np.genfromtxt(file_with_crashed, delimiter=",", dtype=np.int32)[:-1]
+
+counter = 0
+tot_jobs = len(indices)
 jobs_to_go = tot_jobs - counter
 
 while jobs_to_go > 0:
@@ -27,7 +31,8 @@ while jobs_to_go > 0:
         if n_jobs_to_submit > jobs_to_go:
             n_jobs_to_submit = jobs_to_go
 
-        os.system("python submission_script.py %i %i" % (counter, counter+n_jobs_to_submit))
+        for i in range(n_jobs_to_submit):
+            os.system("python resubmission_script.py %i " % (indices[counter+i]))
 
         counter += n_jobs_to_submit
 

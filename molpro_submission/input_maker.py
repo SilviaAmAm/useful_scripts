@@ -25,8 +25,9 @@ traj_idx = np.array(data.get("traj_idx"), dtype=np.int32)
 os.mkdir(molpro_dir_name)
 
 # The Molpro input file header and footer
+n_electrons = np.sum(zs[0])
 header = "memory,500,m\ngeomtyp=xyz\nnosym\nnoorient\ngdirect\ngeometry={\n"
-footer = "}\nbasis={ default,tzvp }\n{uks,b3lyp,direct;wf,55,1,1}\nforce\n{ibba,bonds=1}"
+footer = "}\nbasis={ default,tzvp }\n{uks,b3lyp,direct;wf,%s,1,1}\nforce\n{ibba,bonds=1}" % str(n_electrons)
 
 # The loop to create each input file
 n_files = xyz.shape[0]
@@ -36,9 +37,6 @@ for n in range(n_files):
     file_name = filenumber + "_" + str(traj_idx[n]) + "_b3lyp_tzvp_u.com"
 
     utils.write_molpro_input(xyz[n], zs[n], file_name, molpro_dir_name, header, footer)
-
-    if n == 5:
-        break
 
 
 
