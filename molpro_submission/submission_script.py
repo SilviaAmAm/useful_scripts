@@ -28,7 +28,7 @@ for file in filenames_to_run:
     file_name_with_extension = file.split("/")[-1]
 
     for line in submit_script:
-        if "ccsd" in line:
+        if key_in_filename in line:
             index_end = line.find(key_in_filename)
             index_start = index_end - 8
             line = line.replace(line[index_start:index_end], file_name_with_extension[:len(key_in_filename)+4])
