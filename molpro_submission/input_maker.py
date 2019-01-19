@@ -9,7 +9,7 @@ import utils
 import numpy as np
 
 ####### Things to modify ##########
-file_hdf5 = "/Volumes/Transcend/data_sets/CN_isopentane_pm6/cn_isopentane_pm6.hdf5"
+file_hdf5 = "/Volumes/Transcend/data_sets/CN_2_isohexane/cn_2isohexane_pm6.hdf5"
 molpro_dir_name = "cn_isopentane_molpro_inputs_dft/"
 ###################################
 
@@ -34,9 +34,12 @@ n_files = xyz.shape[0]
 for n in range(n_files):
 
     filenumber = utils.pad_filename(n)
-    file_name = filenumber + "_" + str(traj_idx[n]) + "_b3lyp_tzvp_u.com"
+    file_name = filenumber + "_" + str(traj_idx[n]) + "_ccsd.com"
 
     utils.write_molpro_input(xyz[n], zs[n], file_name, molpro_dir_name, header, footer)
+
+    if n==5:
+        exit()
 
 
 

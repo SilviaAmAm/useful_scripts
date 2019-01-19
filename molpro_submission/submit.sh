@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -l walltime=00:15:00
 #PBS -l nodes=1:ppn=1
-#PBS -N 00001_0_ccsd
+#PBS -N 18000_11_ccsd
 #PBS -j oe
 #PBS -o /panfs/panasas01/chem/sa16246/calculations/isopentane_cn_dft/cn_isopentane_molpro_outputs/
 
@@ -15,4 +15,4 @@ echo This jobs runs on the following machines: echo `cat $PBS_NODEFILE | uniq`
 cd $PBS_O_WORKDIR
 
 # The actual command
-/panfs/panasas01/chem/sb13343/Molpro/bin/molpro -W /local -d /local  --no-xml-output /panfs/panasas01/chem/sa16246/calculations/isopentane_cn_dft/cn_isopentane_molpro_inputs/00001_0_ccsd.com
+/panfs/panasas01/chem/sb13343/Molpro/bin/molpro -W /local -d /local  --no-xml-output /panfs/panasas01/chem/sa16246/calculations/isopentane_cn_dft/cn_isopentane_molpro_inputs/18000_11_ccsd.com

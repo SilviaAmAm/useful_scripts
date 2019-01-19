@@ -8,7 +8,8 @@ import sys
 
 ###### Things to change #############
 path_to_molpro_inputs = "/Volumes/Transcend/useful_scripts/molpro_submission/cn_isopentane_molpro_inputs_dft"
-indices_to_run = list(range(int(sys.argv[1]),int(sys.argv[2])))
+# indices_to_run = list(range(int(sys.argv[1]),int(sys.argv[2])))
+indices_to_run = [18000]
 key_in_filename = "ccsd"
 #####################################
 
@@ -31,7 +32,7 @@ for file in filenames_to_run:
         if key_in_filename in line:
             index_end = line.find(key_in_filename)
             index_start = index_end - 8
-            line = line.replace(line[index_start:index_end], file_name_with_extension[:len(key_in_filename)+4])
+            line = line.replace(line[index_start:index_end], file_name_with_extension[:-len(key_in_filename)-4])
         temp_submit_script.write(line)
 
     temp_submit_script.close()
