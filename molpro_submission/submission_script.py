@@ -10,7 +10,7 @@ import sys
 path_to_molpro_inputs = "/Volumes/Transcend/useful_scripts/molpro_submission/cn_isopentane_molpro_inputs_dft"
 # indices_to_run = list(range(int(sys.argv[1]),int(sys.argv[2])))
 indices_to_run = [18000]
-key_in_filename = "ccsd"
+key_in_filename = "cf-uPBE-tzvp"
 #####################################
 
 filenames = glob.glob(path_to_molpro_inputs + "/*.com")

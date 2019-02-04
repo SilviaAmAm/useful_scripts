@@ -5,7 +5,7 @@ import h5py
 def get_filename(filename):
     split_1 = filename.split("/")
     split_2 = split_1[-1].split("_")
-    return int(split_2[0])
+    return int(split_2[0]), int(split_2[1])
 
 def get_energy(file):
 
@@ -78,9 +78,10 @@ def extract_data(filename):
     energies = 0
     forces = []
     filename_number = -1
+    traj_idx = -1
 
     # Getting the filename
-    filename_number = get_filename(filename)
+    filename_number, traj_idx = get_filename(filename)
 
     # Getting the energy
     ene = get_energy(f)
@@ -91,14 +92,14 @@ def extract_data(filename):
     # Getting forces
     forces = get_forces(f)
 
-    return filename_number, xyz, zs, ene, forces
+    return filename_number, traj_idx, xyz, zs, ene, forces
 
-def check_data(f_n, xyz, zs, ene, forces):
+def check_data(f_n, traj_idx, xyz, zs, ene, forces):
 
     if ene == 0:
         return False
 
-    if f_n == -1:
+    if f_n == -1 or traj_idx == -1:
         return False
 
     if len(xyz) == 0 or len(forces) == 0 or len(zs) == 0:
@@ -113,39 +114,24 @@ def check_data(f_n, xyz, zs, ene, forces):
     return True
 
 # Load all the dft filenames
-filenames_train = glob.glob("/Volumes/Transcend/data_sets/CN_isobutane_model/training_Molpro/*.out")
-filenames_test = glob.glob("/Volumes/Transcend/data_sets/CN_isobutane_model/test_Molpro/*.out")
+filenames_molpro = glob.glob("/Volumes/Transcend/data_sets/CN_isopentane_pm6/dft_pbe0/structures/*.out")
 
 # From each file extract energy, forces, and cartesian coordinates
 all_f_n = []
+all_traj_idx = []
 all_xyz = []
 all_ene = []
 all_zs = []
 all_forces = []
 
-for item in filenames_train:
-    filename_number, xyz, zs, ene, forces = extract_data(item)
+for item in filenames_molpro:
+    filename_number, traj_idx, xyz, zs, ene, forces = extract_data(item)
 
-    is_correct = check_data(filename_number, xyz, zs, ene, forces)
+    is_correct = check_data(filename_number, traj_idx, xyz, zs, ene, forces)
 
     if is_correct:
         all_f_n.append(filename_number)
-        all_xyz.append(xyz)
-        all_zs.append(zs)
-        all_ene.append(ene)
-        all_forces.append(forces)
-    else:
-        print("File %s has errors" % (filename_number))
-
-max_filenumber = max(all_f_n)
-
-for item in filenames_test:
-    filename_number, xyz, zs, ene, forces = extract_data(item)
-
-    is_correct = check_data(filename_number, xyz, zs, ene, forces)
-
-    if is_correct:
-        all_f_n.append(filename_number+max_filenumber+1)
+        all_traj_idx.append(traj_idx)
         all_xyz.append(xyz)
         all_zs.append(zs)
         all_ene.append(ene)
@@ -154,6 +140,7 @@ for item in filenames_test:
         print("File %s has errors" % (filename_number))
 
 all_f_n = np.asarray(all_f_n)
+all_traj_idx = np.asarray(all_traj_idx)
 all_xyz = np.asarray(all_xyz)
 all_ene = np.asarray(all_ene)
 all_zs = np.asarray(all_zs)
@@ -162,9 +149,10 @@ all_forces = np.asarray(all_forces)
 print("The shape of the xyz, zs, ene and forces is %s, %s, %s and %s." % (str(all_xyz.shape), str(all_zs.shape), str(all_ene.shape), str(all_forces.shape)) )
 
 # Make a hdf5 dataset with filenames, cartesian coordinates, energy and forces
-f = h5py.File("pruned_isopentane_cn_dft.hdf5", "w")
+f = h5py.File("b3lyp_isopentane_cn_pm6.hdf5", "w")
 
 f.create_dataset("Filenumber", all_f_n.shape, data=all_f_n)
+f.create_dataset("traj_idx", all_traj_idx.shape, data=all_traj_idx)
 f.create_dataset("xyz", all_xyz.shape, data=all_xyz)
 f.create_dataset("ene", all_ene.shape, data=all_ene)
 f.create_dataset("zs", all_zs.shape, data=all_zs)
